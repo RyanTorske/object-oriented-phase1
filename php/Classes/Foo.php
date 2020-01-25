@@ -117,7 +117,7 @@ public function setAuthorAvatarUrl(string $newAuthorAvatarUrl) : void {
 		return;
 	}
 	if (strlen($newAuthorAvatarUrl) > 255) {
-		throw (new\RangeException("The Avatar URL can only be a max of 255 characters"));
+		throw (new\RangeException("The Avatar URL can only be a max of 255 characters."));
 	}
 	$this->authorAvatarUrl = $newAuthorAvatarUrl;
 }
@@ -134,6 +134,12 @@ public function getAuthorEmail() : string {
  * @throws /RangeException if the author email is too long or null
  */
 public function setAuthorEmail(string $newAuthorEmail) : void {
-	
+	if ($newAuthorEmail === null) {
+		throw (new\RangeException("Author Needs to Have an Email."));
+	}
+	if(strlen($newAuthorEmail) > 128) {
+		throw (new\RangeException("Author Email Can Be a Max of 128 Characters in Length"));
+	}
+	$this->authorEmail = $newAuthorEmail;
 }
 }
