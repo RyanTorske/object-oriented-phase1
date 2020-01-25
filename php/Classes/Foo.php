@@ -103,5 +103,37 @@ public function setAuthorActivationToken(string $newAuthorActivationToken) : voi
  * accessor method for the author avatar url
  * @return string value of avatar url
  */
-
+public function getAuthorAvatarUrl() : string {
+	return ($this->authorAvatarUrl);
+}
+/**
+ * mutator method for author avatar url
+ * @param string $newAuthorAvatarUrl
+ * @throws /RangeException if the author avatar url is too long
+ */
+public function setAuthorAvatarUrl(string $newAuthorAvatarUrl) : void {
+	if ($newAuthorAvatarUrl === null) {
+		$this->authorAvatarUrl = null;
+		return;
+	}
+	if (strlen($newAuthorAvatarUrl) > 255) {
+		throw (new\RangeException("The Avatar URL can only be a max of 255 characters"));
+	}
+	$this->authorAvatarUrl = $newAuthorAvatarUrl;
+}
+/**
+ * accessor method for author email
+ * @returns string value of the authors email
+ */
+public function getAuthorEmail() : string {
+	return ($this->authorEmail);
+}
+/**
+ * mutator method for the author email
+ * @param string $newAuthorEmail
+ * @throws /RangeException if the author email is too long or null
+ */
+public function setAuthorEmail(string $newAuthorEmail) : void {
+	
+}
 }
