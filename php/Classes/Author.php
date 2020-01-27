@@ -1,10 +1,12 @@
 <?php
 
-namespace RyanTorske\objectorientedphase1;
+namespace RyanTorske\ObjectOrientedPhase1;
 require_once("autoload.php");
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
 
+use Exception;
 use InvalidArgumentException;use Ramsey\Uuid\Uuid;use RangeException;
+use TypeError;
 
 /**
  * Author of a News Website logging into account
@@ -28,8 +30,8 @@ use ValidateDate;
 	 * @param string $newAuthorUsername
 	 * @throws InvalidArgumentException if data is put into system and is not valid or insecure
 	 * @throws RangeException has too many characters in the allotted string
-	 * @throws \Exception an issue occurred with either string input
-	 * @throws \TypeError incorrect string entered, or incorrect email
+	 * @throws Exception an issue occurred with either string input
+	 * @throws TypeError incorrect string entered, or incorrect email
 	 **/
 	public function __construct($newAuthorId, $newAuthorActivationToken, $newAuthorAvatarUrl, $newAuthorEmail, $newAuthorHash, $newAuthorUsername) {
 		try {
@@ -94,11 +96,12 @@ public function getAuthorID(): Uuid {
  * @param Uuid / string $newAuthorId value of a new author id
  * @throws /RangeException if $newAuthorId is not positive
  * @throws /TypeError if the profile Id is not the uuid
+ * @throws /InvalidArgumentException
  */
 public function setAuthorId($newAuthorId): void {
 	try {
 		$uuid = self::validateUuid($newAuthorId);
-	} catch(\InvalidArguementException | RangeException | \Exception | \TypeError $exception) {
+	} catch(\InvalidArguementException | RangeException | Exception | TypeError $exception) {
 		$exceptionType = get_class($exception);
 		throw(new $exceptionType($exception->getMessage(), 0, $exception));
 	}
@@ -169,7 +172,7 @@ public function getAuthorEmail() : string {
  * @param string $newAuthorEmail
  * @throws RangeException if the author email is too long or null
  * @throws \invalidArgumentException if $newAuthorEmail is not a valid email or insecure
- * @throws \TypeError if $newAuthorEmail is not a string
+ * @throws TypeError if $newAuthorEmail is not a string
  */
 public function setAuthorEmail(string $newAuthorEmail) : void {
 	$newAuthorEmail = trim($newAuthorEmail);
@@ -195,7 +198,7 @@ public function getAuthorHash(): string {
 	 * @param string $newAuthorHash
 	 * @throws \InvalidArgumentException if hash is not secure
 	 * @throws RangeException if the hash is not 128 characters
-	 * @throws \TypeError if profile hash is not a string
+	 * @throws TypeError if profile hash is not a string
 	 */
 	public function setAuthorHash(string $newAuthorHash) : void {
 		//enforce the hash is really a hash

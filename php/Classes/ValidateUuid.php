@@ -1,6 +1,6 @@
 <?php
-namespace RyanTorske\objectorientedphase1;
-require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
+namespace RyanTorske\ObjectOrientedPhase1;
+require_once(dirname(__DIR__) . "/Classes/autoload.php");
 use Ramsey\Uuid\Uuid;
 /**
  * Trait to validate a uuid

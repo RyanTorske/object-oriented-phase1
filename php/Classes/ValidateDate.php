@@ -1,5 +1,5 @@
 <?php
-namespace RyanTorske\objectorientedphase1;
+namespace RyanTorske\ObjectOrientedPhase1;
 /**
  * Trait to Validate a mySQL Date
  *
