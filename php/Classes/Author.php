@@ -52,6 +52,7 @@ private $authorHash;
  * @var $authorUsername
  */
 private $authorUsername;
+
 /**
  * accessor method for the author Id
  *
@@ -91,7 +92,7 @@ public function getAuthorActivationToken() : string {
  * @throws /TypeError if the activation token is not a complete string
  */
 
-public function setAuthorActivationToken(string $newAuthorActivationToken) : void {
+public function setAuthorActivationToken(?string $newAuthorActivationToken) : void {
 	if($newAuthorActivationToken === null) {
 		$this->authorActivationToken = null;
 		return;
@@ -138,11 +139,15 @@ public function getAuthorEmail() : string {
 /**
  * mutator method for the author email
  * @param string $newAuthorEmail
- * @throws /RangeException if the author email is too long or null
+ * @throws \RangeException if the author email is too long or null
+ * @throws \InvalidArgumentException if $newAuthorEmail is not a valid email or insecure
+ * @throws \TypeError if $newAuthorEmail is not a string
  */
 public function setAuthorEmail(string $newAuthorEmail) : void {
+	$newAuthorEmail = trim($newAuthorEmail);
+	$newAuthorEmail = filter_var($newAuthorEmail, FILTER_VALIDATE_EMAIL);
 	if ($newAuthorEmail === null) {
-		throw (new\RangeException("Author Needs to Have an Email."));
+		throw (new\RangeException("Author Email is empty or insecure."));
 	}
 	if(strlen($newAuthorEmail) > 128) {
 		throw (new\RangeException("Author Email Can Be a Max of 128 Characters in Length"));
@@ -166,7 +171,7 @@ public function setAuthorUsername(string $newAuthorUsername) : void {
 		throw (new\RangeException("Author Needs to have a Username."));
 	}
 	if(strlen($newAuthorUsername) > 32) {
-		throw (new\RangeException("Author Username Can be a MAx of 32 Characters in Length."));
+		throw (new\RangeException("Author Username Can be a Max of 32 Characters in Length."));
 	}
 	$this->authorUsername = $newAuthorUsername;
 }

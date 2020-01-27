@@ -1,5 +1,5 @@
 <?php
-namespace RyanTorske\object-oriented-phase1\Author;
+namespace RyanTorske\object-oriented-phase1;
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 /**
