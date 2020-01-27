@@ -1,10 +1,17 @@
 <?php
+
+namespace RyanTorske\object-oriented-phase1\;
+require_once("autoload.php");
+require_once(dirname(__DIR__) . "/vendor/autoload.php");
+
+use Ramsey\Uuid\Uuid;
+
 /**
  * Author of a News Website logging into account
  *
  * The author class will be where all data will be kept about author.
  *
- * @author Ryan Torske <rtorske@cnm.edu
+ * @author Ryan Torske <rtorske@cnm.edu>
  **/
 class author {
 use ValidateUuid;
@@ -56,8 +63,8 @@ public function getAuthorID(): Uuid {
 /**
  * mutator method for author id use
  * @param Uuid / string $newAuthorId value of a new author id
- * @throws \RangeException if $newAuthorId is not positive
- * @throws \TypeError if the profile Id is not the uuid
+ * @throws /RangeException if $newAuthorId is not positive
+ * @throws /TypeError if the profile Id is not the uuid
  */
 public function setAuthorId($newAuthorId): void {
 	try {
@@ -79,9 +86,9 @@ public function getAuthorActivationToken() : string {
 /**
  * mutator method for the author activation token
  * @param string $newAuthorActivationToken
- * @throws \InvalidArgumentException if the token is not a string or is insecure
- * @throws \RangeException if the token is not exactly at 32 characters
- * @throws \TypeError if the activation token is not a complete string
+ * @throws /InvalidArgumentException if the token is not a string or is insecure
+ * @throws /RangeException if the token is not exactly at 32 characters
+ * @throws /TypeError if the activation token is not a complete string
  */
 
 public function setAuthorActivationToken(string $newAuthorActivationToken) : void {
@@ -141,5 +148,26 @@ public function setAuthorEmail(string $newAuthorEmail) : void {
 		throw (new\RangeException("Author Email Can Be a Max of 128 Characters in Length"));
 	}
 	$this->authorEmail = $newAuthorEmail;
+}
+/**
+ * accessor method for the author username
+ * @returns string value of the authors username
+ */
+public function getAuthorUsername() : string {
+	return($this->authorUsername);
+}
+/**
+ * mutator method for the author username
+ * @param string $newAuthorUsername
+ * @throws /RangeException if the author username is too long
+ */
+public function setAuthorUsername(string $newAuthorUsername) : void {
+	if ($newAuthorUsername === null){
+		throw (new\RangeException("Author Needs to have a Username."));
+	}
+	if(strlen($newAuthorUsername) > 32) {
+		throw (new\RangeException("Author Username Can be a MAx of 32 Characters in Length."));
+	}
+	$this->authorUsername = $newAuthorUsername;
 }
 }
