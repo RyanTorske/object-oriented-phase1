@@ -1,5 +1,5 @@
 <?php
-namespace RyanTorske\object-oriented-phase1;
+namespace RyanTorske\objectorientedphase1;
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 /**
@@ -23,13 +23,13 @@ trait ValidateUuid {
 	 * @throws \InvalidArgumentException if $newUuid is not a valid uuid
 	 * @throws \RangeException if $newUuid is not a valid uuid v4
 	 **/
-	private static function validateUuid($newUuid) : Uuid {
+	private static function validateUuid($newUuid): Uuid {
 		// verify a string uuid
 		if(gettype($newUuid) === "string") {
 			// 16 characters is binary data from mySQL - convert to string and fall to next if block
 			if(strlen($newUuid) === 16) {
 				$newUuid = bin2hex($newUuid);
-				$newUuid = substr($newUuid, 0, 8) . "-" . substr($newUuid, 8, 4) . "-" . substr($newUuid,12, 4) . "-" . substr($newUuid, 16, 4) . "-" . substr($newUuid, 20, 12);
+				$newUuid = substr($newUuid, 0, 8) . "-" . substr($newUuid, 8, 4) . "-" . substr($newUuid, 12, 4) . "-" . substr($newUuid, 16, 4) . "-" . substr($newUuid, 20, 12);
 			}
 			// 36 characters is a human readable uuid
 			if(strlen($newUuid) === 36) {
@@ -51,5 +51,6 @@ trait ValidateUuid {
 		if($uuid->getVersion() !== 4) {
 			throw(new \RangeException("uuid is incorrect version"));
 		}
-		return($uuid);
+		return ($uuid);
 	}
+}

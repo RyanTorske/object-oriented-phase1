@@ -1,10 +1,10 @@
 <?php
 
-namespace RyanTorske\object-oriented-phase1\;
+namespace RyanTorske\objectorientedphase1;
 require_once("autoload.php");
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
 
-use Ramsey\Uuid\Uuid;
+use InvalidArgumentException;use Ramsey\Uuid\Uuid;use RangeException;
 
 /**
  * Author of a News Website logging into account
@@ -17,6 +17,33 @@ class author {
 use ValidateUuid;
 use ValidateDate;
 
+	/**
+	 * Constructor for this author profile
+	 *
+	 * @param int $newAuthorId new author profile id
+	 * @param string $newAuthorActivationToken
+	 * @param int $newAuthorAvatarUrl
+	 * @param string $newAuthorEmail
+	 * @param string $newAuthorHash
+	 * @param string $newAuthorUsername
+	 * @throws InvalidArgumentException if data is put into system and is not valid or insecure
+	 * @throws RangeException has too many characters in the allotted string
+	 * @throws \Exception an issue occurred with either string input
+	 * @throws \TypeError incorrect string entered, or incorrect email
+	 **/
+	public function __construct($newAuthorId, $newAuthorActivationToken, $newAuthorAvatarUrl, $newAuthorEmail, $newAuthorHash, $newAuthorUsername) {
+		try {
+			$this->setAuthorId($newAuthorId);
+			$this->setAuthorActivationToken($newAuthorActivationToken);
+			$this->setAuthorAvatarUrl($newAuthorAvatarUrl);
+			$this->setAuthorEmail($newAuthorEmail);
+			$this->setAuthorHash($newAuthorHash);
+			$this->setAuthorUsername($newAuthorUsername);
+		} catch(InvalidArgumentException $exception) {
+			//rethrow to the caller
+			throw(new InvalidArgumentException("Unable to construct profile", 0, $exception));
+		}
+	}
 /**
  * id for the author and will act as primary key
  * @var $authorId
@@ -53,6 +80,7 @@ private $authorHash;
  */
 private $authorUsername;
 
+
 /**
  * accessor method for the author Id
  *
@@ -70,7 +98,7 @@ public function getAuthorID(): Uuid {
 public function setAuthorId($newAuthorId): void {
 	try {
 		$uuid = self::validateUuid($newAuthorId);
-	} catch(\InvalidArguementException | \RangeException | \Exception | \TypeError $exception) {
+	} catch(\InvalidArguementException | RangeException | \Exception | \TypeError $exception) {
 		$exceptionType = get_class($exception);
 		throw(new $exceptionType($exception->getMessage(), 0, $exception));
 	}
@@ -99,11 +127,11 @@ public function setAuthorActivationToken(?string $newAuthorActivationToken) : vo
 	}
 	$newAuthorActivationToken = strtolower(trim($newAuthorActivationToken));
 	if(ctype_xdigit($newAuthorActivationToken) === false) {
-		throw(new\RangeException("Author Activation is Not Valid"));
+		throw(newRangeException("Author Activation is Not Valid"));
 	}
 	//this will check and validate that the activation token is only 32 characters long
 	if(strlen($newAuthorActivationToken)  !== 32) {
-		throw(new\RangeException("Author Activation Token Must Be 32 Characters"));
+		throw(newRangeException("Author Activation Token Must Be 32 Characters"));
 	}
 	$this->authorActivationToken = $newAuthorActivationToken;
 }
@@ -125,7 +153,7 @@ public function setAuthorAvatarUrl(string $newAuthorAvatarUrl) : void {
 		return;
 	}
 	if (strlen($newAuthorAvatarUrl) > 255) {
-		throw (new\RangeException("The Avatar URL can only be a max of 255 characters."));
+		throw (newRangeException("The Avatar URL can only be a max of 255 characters."));
 	}
 	$this->authorAvatarUrl = $newAuthorAvatarUrl;
 }
@@ -139,21 +167,54 @@ public function getAuthorEmail() : string {
 /**
  * mutator method for the author email
  * @param string $newAuthorEmail
- * @throws \RangeException if the author email is too long or null
- * @throws \InvalidArgumentException if $newAuthorEmail is not a valid email or insecure
+ * @throws RangeException if the author email is too long or null
+ * @throws \invalidArgumentException if $newAuthorEmail is not a valid email or insecure
  * @throws \TypeError if $newAuthorEmail is not a string
  */
 public function setAuthorEmail(string $newAuthorEmail) : void {
 	$newAuthorEmail = trim($newAuthorEmail);
 	$newAuthorEmail = filter_var($newAuthorEmail, FILTER_VALIDATE_EMAIL);
 	if ($newAuthorEmail === null) {
-		throw (new\RangeException("Author Email is empty or insecure."));
+		throw (new\InvalidArgumentException("Author Email is empty or not secure."));
 	}
 	if(strlen($newAuthorEmail) > 128) {
-		throw (new\RangeException("Author Email Can Be a Max of 128 Characters in Length"));
+		throw (newRangeException("Author Email Can Be a Max of 128 Characters in Length"));
 	}
 	$this->authorEmail = $newAuthorEmail;
 }
+	/**
+	 * accessor method for the author hash
+	 * @return string value of hash
+	 */
+public function getAuthorHash(): string {
+	return $this->authorHash;
+	}
+	/**
+	 * mutator method for author hash password
+	 *
+	 * @param string $newAuthorHash
+	 * @throws \InvalidArgumentException if hash is not secure
+	 * @throws RangeException if the hash is not 128 characters
+	 * @throws \TypeError if profile hash is not a string
+	 */
+	public function setAuthorHash(string $newAuthorHash) : void {
+		//enforce the hash is really a hash
+		$newAuthorHash = trim($newAuthorHash);
+		if(empty($newAuthorHash) === true); {
+			throw(new \InvalidArgumentException("Profile password hash is invalid or empty."));
+		}
+		//enforce the hash is a Argon hash
+		$authorHashInfo = password_get_info($newAuthorHash);
+		if($authorHashInfo["algoName"] !== "argon2i") {
+			throw(new \InvalidArgumentException("Profile hash is not a valid hash."));
+		}
+		//enforce that the hash is exactly 97 characters.
+		if(strlen($newAuthorHash) !== 97) {
+			throw(new \RangeException("Profile hash must be 97 characters."));
+		}
+		//store the hash
+		$this->authorHash = $newAuthorHash;
+	}
 /**
  * accessor method for the author username
  * @returns string value of the authors username
@@ -167,11 +228,11 @@ public function getAuthorUsername() : string {
  * @throws /RangeException if the author username is too long
  */
 public function setAuthorUsername(string $newAuthorUsername) : void {
-	if ($newAuthorUsername === null){
-		throw (new\RangeException("Author Needs to have a Username."));
+	if ($newAuthorUsername === null) {
+		throw (newRangeException("Author Needs to have a Username."));
 	}
 	if(strlen($newAuthorUsername) > 32) {
-		throw (new\RangeException("Author Username Can be a Max of 32 Characters in Length."));
+		throw (newRangeException("Author Username Can be a Max of 32 Characters in Length."));
 	}
 	$this->authorUsername = $newAuthorUsername;
 }
