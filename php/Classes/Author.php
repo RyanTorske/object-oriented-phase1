@@ -256,6 +256,17 @@ class Author implements \JsonSerializable {
 		$this->authorUsername = $newAuthorUsername;
 	}
 
+
+	/*
+	 * Starting part 2 of OOP, INSERT,DELETE,UPDATE Form.
+	 *
+	 * Inserts this Author into author class for MySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when SQL error occurs
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 */
+
 	public function jsonSerialize(): array {
 		$fields = get_object_vars($this);
 		$fields["authorId"] = $this->authorId->toString();
