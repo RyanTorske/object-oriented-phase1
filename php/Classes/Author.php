@@ -244,7 +244,7 @@ class Author implements \JsonSerializable {
 	/**
 	 * mutator method for the author username
 	 * @param string $newAuthorUsername
-	 * @throws /RangeException if the author username is too long
+	 * @throws \RangeException if the author username is too long
 	 */
 	public function setAuthorUsername(string $newAuthorUsername): void {
 		if($newAuthorUsername === null) {
@@ -265,7 +265,27 @@ class Author implements \JsonSerializable {
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when SQL error occurs
 	 * @throws \TypeError if $pdo is not a PDO connection object
+	 *
 	 */
+
+	public function insert(\PDO $pdo) : void {
+		//create query template
+		$query = "INSERT INTO author(authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername) VALUES(:authorId, :authorActivationToken, :authorAvatarUrl, :authorEmail, :authorHash, :authorUsername)";
+		$statement = $pdo->prepare($query);
+
+		//bind the member variables to the place holders in the template
+		$parameters = ["authorId" => $this->authorId->getBytes(), "authorActivationToken" => $this->authorActivationToken->getBytes(), "authorAvatarUrl" => $this->authorAvatarUrl->getBytes(), "authorEmail" => $this->authorEmail->getBytes(), "authorHash" => $this->authorHash->getBytes(), "authorUsername" => $this->authorUsername->getBytes()];
+		$statement->execute($parameters);
+	}
+
+	/*
+	 * Updates Author in MySQL database
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when SQL error occurs
+	 * @throws \TypeError if $pdo iis not a PDO connection object
+	 */
+	
 
 	public function jsonSerialize(): array {
 		$fields = get_object_vars($this);
