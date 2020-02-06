@@ -322,6 +322,19 @@ class Author implements \JsonSerializable {
 	 * @throws \PDOException when MySQL error occurs
 	 */
 
+	public static function getAuthorByAuthorUsername(\PDO $pdo, string $authorUsername) : \SPLFixedArray {
+		// sanitize the description before searching
+		$authorUsername = trim($authorUsername);
+		$authorUsername = filter_var($authorUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+		//escape any MySQL wild cards
+		$result = str_replace("%", "\\%", $authorUsername);
+		$authorUsername = str_replace("_", "\\_", $result);
+
+		//create query template
+		
+	}
+
 	public function jsonSerialize(): array {
 		$fields = get_object_vars($this);
 		$fields["authorId"] = $this->authorId->toString();
