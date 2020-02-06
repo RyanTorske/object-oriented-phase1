@@ -312,6 +312,16 @@ class Author implements \JsonSerializable {
 		$statement->execute($parameters);
 	}
 
+	/*
+	 * gets the Author by Author username.
+	 *
+	 * @param  \PDO $pdo PDO connection object
+	 * @param string $authorUsername author Id to search for
+	 * @return \SplFixedArray SplFixedArray of Authors found
+	 * @throws \TypeError if author id is an incorrect data type
+	 * @throws \PDOException when MySQL error occurs
+	 */
+
 	public function jsonSerialize(): array {
 		$fields = get_object_vars($this);
 		$fields["authorId"] = $this->authorId->toString();
