@@ -332,8 +332,30 @@ class Author implements \JsonSerializable {
 		$authorUsername = str_replace("_", "\\_", $result);
 
 		//create query template
-		
+		$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername FROM Author WHERE authorUsername LIKE :authorUsername";
+		$statement = $pdo->prepare($query);
+
+		//bind author username to the place holder in the template
+		$authorUsername = "%$authorUsername%";
+		$parameters = ["authorUsername" => $authorUsername];
+		$statement->execute($parameters);
+
+		//build an array of authors
+		$authorArray = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$author = new Author($row["authorId"], $row["authorActivationToken"], $row["authorAvatarUrl"], $row["authorEmail"], $row["authorHash"], $row["authorUsername"]);
+				$authorArray[$authorArray->key()] = $author;
+				$authorArray->next();
+			} catch(\Exception $exception) {
+				//if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return($authorArray);
 	}
+
 
 	public function jsonSerialize(): array {
 		$fields = get_object_vars($this);
