@@ -371,10 +371,10 @@ class Author implements \JsonSerializable {
 	try {
 		$authorId = self::ValidateUuid($authorId);
 	} catch (\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-		throw(new \PDOException($exception->getMessage(), 0. $exception));
+		throw(new \PDOException($exception->getMessage(), 0, $exception));
 }
 	//create query template
-	$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername FROM Author WHERE authorId = :authorId"
+	$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername FROM Author WHERE authorId = :authorId";
 	$statement = $pdo->prepare($query);
 
 	//bind the author id to the place holder in template
