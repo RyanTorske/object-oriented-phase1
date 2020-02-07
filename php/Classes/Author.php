@@ -373,8 +373,15 @@ class Author implements \JsonSerializable {
 	} catch (\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 		throw(new \PDOException($exception->getMessage(), 0. $exception));
 }
-//create query template
-$query
+	//create query template
+	$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername FROM Author WHERE authorId = :authorId"
+	$statement = $pdo->prepare($query);
+
+	//bind the author id to the place holder in template
+	$parameters = ["authorId" => $authorId->getBytes()];
+	$statement->execute($parameters);
+
+	
 }
 
 	public function jsonSerialize(): array {
