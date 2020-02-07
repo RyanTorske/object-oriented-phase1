@@ -357,6 +357,19 @@ class Author implements \JsonSerializable {
 	}
 
 
+
+
+	/**
+	 *gets the Author by authorId
+	 * 
+	 *@param \PDO $pdo PDO connection object
+	 *@param Uuid|string $authorId author id to search for
+	 *@return Author|null Author found or null if not found
+	 *@throws \PDOException when MySQL related errors occur
+	 *@throws \TypeError when a variable is not the correct data type
+	 **/
+
+
 	public function jsonSerialize(): array {
 		$fields = get_object_vars($this);
 		$fields["authorId"] = $this->authorId->toString();
