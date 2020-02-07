@@ -366,7 +366,7 @@ class Author implements \JsonSerializable {
 	 *@throws \PDOException when MySQL related errors occur
 	 *@throws \TypeError when a variable is not the correct data type
 	 **/
-	public static funtion getAuthorbyAuthorId(\PDO $pdo, $authorId) : ?Author {
+	public static function getAuthorByAuthorId(\PDO $pdo, $authorId) : ?Author {
 		//sanitize the authorId before searching
 	try {
 		$authorId = self::ValidateUuid($authorId);
@@ -381,7 +381,19 @@ class Author implements \JsonSerializable {
 	$parameters = ["authorId" => $authorId->getBytes()];
 	$statement->execute($parameters);
 
-	
+//grab the author from MySQL
+	try {
+		$author = null;
+		$statement->setfetchMode(\PDO::FETCH_ASSOC);
+		$row = $statement->fetch();
+		if($row !== false) {
+			$author = new Author($row["authorId"], $row["authorActivationToken"], $row["authorAvatarUrl"], $row["authorEmail"], $row["authorHash"], $row["authorUsername"]);
+		}
+} catch(\Exception $exception) {
+		//if the row couldn't be converted, rethrow it
+		throw(new \PDOException($exception->getMessage(), 0, $exception));
+	}
+	return($author);
 }
 
 	public function jsonSerialize(): array {
